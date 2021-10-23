@@ -1,95 +1,81 @@
+import React, { useEffect, useState } from "react";
+
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
-import React, { useEffect } from "react";
+
+import { Filme } from "../../model/Filme";
 
 import {
-  Avaliacao,
-  BotaoDestaque,
-  CardFilme,
   Container,
   Header,
-  Icon,
-  ListaHorizontal,
-  Nota,
-  Poster,
   PosterHeader,
-  SecaoFilmes,
   TituloDestaque,
+  BotaoDestaque,
+  LabelBotao,
   TituloSecao,
+  SecaoFilmes,
+  CardFilme,
+  Poster,
+  Avaliacao,
+  Icon,
+  Nota,
+  ListaHorizontal,
 } from "./style";
 
-const dados = [
-  {
-    id: 1,
-    poster:
-      "https://www.themoviedb.org/t/p/original/iLyyWblY58WUMmPkCau89hLq6uK.jpg",
-    nota: "8.7",
-  },
-  {
-    id: 2,
-    poster:
-      "https://www.themoviedb.org/t/p/w200/6IxMW3939dOCjzenwzkWEjgICVq.jpg",
-    nota: "9.8",
-  },
-  {
-    id: 3,
-    poster:
-      "https://www.themoviedb.org/t/p/w200/pDvLg7Sii89Sp35aNPZ9BqTV5iK.jpg",
-    nota: "7.7",
-  },
-  {
-    id: 4,
-    poster:
-      "https://www.themoviedb.org/t/p/w200/Ao1sxO43OIViBWJYxFSLykquE8l.jpg",
-    nota: "5.5",
-  },
-  {
-    id: 5,
-    poster:
-      "https://www.themoviedb.org/t/p/w200/kU0NbsUVoUMcYxoISmBCxFmgWYC.jpg",
-    nota: "9.6",
-  },
-];
+interface NavigationProps {
+  navigation: NativeStackNavigationProp<any>;
+}
 
-export default function Home() {
-  // Buscar os filmes da API
+interface Response {
+  results: Filme[];
+}
+
+export default function Home({ navigation }: NavigationProps) {
+  const [filmes, setFilmes] = useState<Filme[]>([]);
+
   useEffect(() => {
-    async function carregarFilmes() {
-      const resposta = await axios.get(
-        "https://api.themoviedb.org/3/trending/movie/week?api_key=1e922667481ab207d642450b0efb461e"
+    async function carregarDados() {
+      const resposta = await axios.get<Response>(
+        "https://api.themoviedb.org/3/trending/tv/week?api_key=1e922667481ab207d642450b0efb461e"
       );
-      console.log(resposta);
+      setFilmes(resposta.data.results);
     }
-    carregarFilmes();
+    carregarDados();
   });
+
+  function handleDetail(filme: Filme) {
+    navigation.navigate("Details", { filme });
+  }
 
   return (
     <Container>
       <Header>
         <PosterHeader
           source={{
-            uri: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wHa6KOJAoNTFLFtp7wguUJKSnju.jpg",
+            uri: "https://www.themoviedb.org/t/p/w500/uAWB8qOs7L6zGTwxAbeT97AsJk6.jpg",
           }}
-        ></PosterHeader>
+        />
         <TituloDestaque>Fundação</TituloDestaque>
-        <BotaoDestaque title={"Destaque"} onPress={() => {}}></BotaoDestaque>
+        <BotaoDestaque>
+          <LabelBotao>detalhes</LabelBotao>
+        </BotaoDestaque>
       </Header>
 
       <TituloSecao>Filmes em Alta</TituloSecao>
 
       <SecaoFilmes>
         <ListaHorizontal
-          data={dados}
+          data={filmes}
           renderItem={({ item }) => (
-            <CardFilme>
+            <CardFilme onPress={() => handleDetail(item)}>
               <Poster
                 source={{
-                  uri: item.poster,
+                  uri: "https://image.tmdb.org/t/p/w200/" + item.poster_path,
                 }}
-              ></Poster>
-
+              />
               <Avaliacao>
-                <Icon name="star"></Icon>
-                <Nota>{item.nota}</Nota>
+                <Icon name="star" />
+                <Nota>{item.vote_average}</Nota>
               </Avaliacao>
             </CardFilme>
           )}
