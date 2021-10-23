@@ -1,10 +1,13 @@
 import React from "react";
+import { Platform } from "react-native";
+
 import { ThemeProvider } from "styled-components/native";
 
 import {
   useFonts,
   Roboto_100Thin,
   Roboto_400Regular,
+  Roboto_500Medium,
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 import AppLoading from "expo-app-loading";
@@ -12,30 +15,36 @@ import AppLoading from "expo-app-loading";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import temaDefault from "./global/themes/default";
+import themeDefault from "./global/themes/default";
 
-import { Detail } from "./pages/Details";
-import Home from "./pages/Home";
+import DetailPage from "./pages/Detail";
+import HomePage from "./pages/Home";
+
+if (Platform.OS === "android") {
+  require("intl"); // import intl object
+  require("intl/locale-data/jsonp/pt-BR"); // load the required locale details
+}
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [carregou] = useFonts({
+  const [fontsLoaded] = useFonts({
     Roboto_100Thin,
     Roboto_400Regular,
+    Roboto_500Medium,
     Roboto_700Bold,
   });
 
-  if (!carregou) {
+  if (!fontsLoaded) {
     return <AppLoading />;
   }
 
   return (
-    <ThemeProvider theme={temaDefault}>
+    <ThemeProvider theme={themeDefault}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Details" component={Detail} />
+          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="DetailPage" component={DetailPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

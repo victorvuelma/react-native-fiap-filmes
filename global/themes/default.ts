@@ -4,7 +4,7 @@ export default {
     primary: "#FF0066",
     text: "#DEDEDE",
   },
-  fonte: {
+  font: {
     light: "Roboto_100Thin",
     regular: "Roboto_400Regular",
     bold: "Roboto_700Bold",

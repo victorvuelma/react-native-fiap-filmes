@@ -3,84 +3,123 @@ import React, { useEffect, useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 
-import { Filme } from "../../model/Filme";
+import { Film } from "../../model/Filme";
 
 import {
   Container,
   Header,
   PosterHeader,
-  TituloDestaque,
-  BotaoDestaque,
-  LabelBotao,
-  TituloSecao,
-  SecaoFilmes,
-  CardFilme,
+  TitleHeader,
+  ButtonHeader,
+  LabelButton,
+  SectionTitle,
+  Section,
+  CardFilm,
   Poster,
-  Avaliacao,
-  Icon,
-  Nota,
-  ListaHorizontal,
+  FilmRating,
+  RatingIcon,
+  Rating,
+  HorizontalList,
 } from "./style";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface NavigationProps {
   navigation: NativeStackNavigationProp<any>;
 }
 
 interface Response {
-  results: Filme[];
+  results: Film[];
 }
 
-export default function Home({ navigation }: NavigationProps) {
-  const [filmes, setFilmes] = useState<Filme[]>([]);
+export default function HomePage({ navigation }: NavigationProps) {
+  const [films, setFilms] = useState<Film[]>([]);
+  const [series, setSeries] = useState<Film[]>([]);
 
   useEffect(() => {
-    async function carregarDados() {
-      const resposta = await axios.get<Response>(
-        "https://api.themoviedb.org/3/trending/tv/week?api_key=1e922667481ab207d642450b0efb461e"
+    async function loadFilms() {
+      const response = await axios.get<Response>(
+        "https://api.themoviedb.org/3/trending/movie/week?api_key=c3c2b0c5bc1a998367f9ed02a2156799"
       );
-      setFilmes(resposta.data.results);
+      setFilms(response.data.results);
     }
-    carregarDados();
+    loadFilms();
+
+    async function loadSeries() {
+      const response = await axios.get<Response>(
+        "https://api.themoviedb.org/3/trending/tv/week?api_key=c3c2b0c5bc1a998367f9ed02a2156799"
+      );
+      setSeries(response.data.results);
+    }
+    loadSeries();
   });
 
-  function handleDetail(filme: Filme) {
-    navigation.navigate("Details", { filme });
+  function handleDetail(film: Film) {
+    navigation.navigate("DetailPage", { film });
   }
 
   return (
-    <Container>
-      <Header>
-        <PosterHeader
-          source={{
-            uri: "https://www.themoviedb.org/t/p/w500/uAWB8qOs7L6zGTwxAbeT97AsJk6.jpg",
-          }}
-        />
-        <TituloDestaque>Fundação</TituloDestaque>
-        <BotaoDestaque>
-          <LabelBotao>detalhes</LabelBotao>
-        </BotaoDestaque>
-      </Header>
+    <ScrollView>
+      <Container>
+        <Header>
+          <PosterHeader
+            source={{
+              uri: "https://www.themoviedb.org/t/p/w500/uAWB8qOs7L6zGTwxAbeT97AsJk6.jpg",
+            }}
+          />
+          <TitleHeader>Fundação</TitleHeader>
+          <ButtonHeader>
+            <LabelButton>detalhes</LabelButton>
+          </ButtonHeader>
+        </Header>
 
-      <TituloSecao>Filmes em Alta</TituloSecao>
+        <SectionTitle>Filmes em Alta</SectionTitle>
+        <Section>
+          <HorizontalList
+            data={films}
+            renderItem={({ item }) => (
+              <CardFilm onPress={() => handleDetail(item)}>
+                <Poster
+                  source={{
+                    uri: "https://image.tmdb.org/t/p/w200/" + item.poster_path,
+                  }}
+                />
+                <FilmRating>
+                  <RatingIcon name="star" />
+                  <Rating>
+                    {item.vote_average.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 1,
+                    })}
+                  </Rating>
+                </FilmRating>
+              </CardFilm>
+            )}
+          />
+        </Section>
 
-      <SecaoFilmes>
-        <ListaHorizontal
-          data={filmes}
-          renderItem={({ item }) => (
-            <CardFilme onPress={() => handleDetail(item)}>
-              <Poster
-                source={{
-                  uri: "https://image.tmdb.org/t/p/w200/" + item.poster_path,
-                }}
-              />
-              <Avaliacao>
-                <Icon name="star" />
-                <Nota>{item.vote_average}</Nota>
-              </Avaliacao>
-            </CardFilme>
-          )}
-        />
-      </SecaoFilmes>
-    </Container>
+        <SectionTitle>Séries em Alta</SectionTitle>
+        <Section>
+          <HorizontalList
+            data={series}
+            renderItem={({ item }) => (
+              <CardFilm onPress={() => handleDetail(item)}>
+                <Poster
+                  source={{
+                    uri: "https://image.tmdb.org/t/p/w200/" + item.poster_path,
+                  }}
+                />
+                <FilmRating>
+                  <RatingIcon name="star" />
+                  <Rating>
+                    {item.vote_average.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 1,
+                    })}
+                  </Rating>
+                </FilmRating>
+              </CardFilm>
+            )}
+          />
+        </Section>
+      </Container>
+    </ScrollView>
   );
 }
