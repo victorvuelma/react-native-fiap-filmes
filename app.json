@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "react-native-fiap-filmes",
+    "name": "FIAP Filmes",
     "slug": "react-native-fiap-filmes",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Fiap Filmes Application",
+    "githubUrl": "https://github.com/victorvuelma/react-native-fiap-filmes"
   }
 }
