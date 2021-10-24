@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
   background-color: ${({ theme }) => theme.color.background};
 `;

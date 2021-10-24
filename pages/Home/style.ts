@@ -4,9 +4,9 @@ import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
 
-import { Film } from "../../model/Filme";
+import { Movie } from "../../model/Movie";
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
   background-color: ${({ theme }) => theme.color.background};
 `;
@@ -60,7 +60,7 @@ export const Section = styled.View`
 `;
 
 export const HorizontalList = styled(
-  FlatList as new () => FlatList<Film>
+  FlatList as new () => FlatList<Movie>
 ).attrs({
   horizontal: true,
   showsHorizontalScrollIndicator: false,
