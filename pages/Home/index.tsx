@@ -35,10 +35,9 @@ export default function Home({ navigation }: NavigationProps) {
   const [series, setSeries] = useState<Movie[]>([]);
 
   useEffect(() => {
-    console.log("Load Films");
     async function loadFilms() {
       const filmsResponse = await axios.get<Response>(
-        "https://api.themoviedb.org/3/trending/movie/week?api_key=c3c2b0c5bc1a998367f9ed02a2156799"
+        "https://api.themoviedb.org/3/trending/movie/week?language=pt-BR&api_key=c3c2b0c5bc1a998367f9ed02a2156799"
       );
       setFilms(filmsResponse.data.results);
     }
@@ -46,10 +45,9 @@ export default function Home({ navigation }: NavigationProps) {
   }, []);
 
   useEffect(() => {
-    console.log("Load Series");
     async function loadSeries() {
       const seriesResponse = await axios.get<Response>(
-        "https://api.themoviedb.org/3/trending/tv/week?api_key=c3c2b0c5bc1a998367f9ed02a2156799"
+        "https://api.themoviedb.org/3/trending/tv/week?language=pt-BR&api_key=c3c2b0c5bc1a998367f9ed02a2156799"
       );
       setSeries(seriesResponse.data.results);
     }

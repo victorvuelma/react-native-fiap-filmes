@@ -11,6 +11,7 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 import AppLoading from "expo-app-loading";
+import { StatusBar } from "expo-status-bar";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -41,6 +42,8 @@ export default function App() {
 
   return (
     <ThemeProvider theme={themeDefault}>
+      <StatusBar style="light" />
+
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={Home} />
